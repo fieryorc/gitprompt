@@ -19,6 +19,9 @@
     <Filter Include="Header Files\Watcher">
       <UniqueIdentifier>{61425578-2e23-41d1-b01c-393d940bf0e4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Utils">
+      <UniqueIdentifier>{03be6840-242e-4f2e-b458-06386d874f73}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -36,9 +39,6 @@
     <ClInclude Include="GitStatus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\client\Logger.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Watcher\ReadDirectoryChangesPrivate.h">
       <Filter>Header Files\Watcher</Filter>
     </ClInclude>
@@ -52,6 +52,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CacheService.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils\SmartHandle.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugLogger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -74,7 +83,10 @@
     <ClCompile Include="GitStatus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\client\Logger.cpp">
+    <ClCompile Include="CacheService.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugLogger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

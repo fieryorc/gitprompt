@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include <codecvt>
 #include "git2.h"
-#include "Logger.h"
+#include "ConsoleLogger.h"
 
 
 extern int status_cb(const char *path, unsigned int status_flags, void *payload);
@@ -46,6 +46,6 @@ int _tmain(int argc, _TCHAR* argv[])
 int status_cb(const char *path, unsigned int status_flags, void *payload)
 {
 	wstring_convert<codecvt_utf8<wchar_t>> converter;
-	Logger::LogMessage(converter.from_bytes(path));
+	Logger::LogInfo(converter.from_bytes(path));
 	return 0;
 }

@@ -17,7 +17,7 @@ CDirWatcher::~CDirWatcher()
 
 CGitStatus* CDirWatcher::TryGetFromCache(const wstring& path)
 {
-	auto result = std::find(this->m_watchedPaths.begin(), this->m_watchedPaths.end(), [path](CGitStatus* gs) {
+	auto result = std::find_if(this->m_watchedPaths.begin(), this->m_watchedPaths.end(), [path](CGitStatus* gs) {
 		return path.compare(gs->GetPath()) == 0;
 	});
 
@@ -30,6 +30,7 @@ CGitStatus* CDirWatcher::AddPath(const wstring& path)
 	CGitStatus* gs = new CGitStatus(path);
 	gs->Load();
 	this->m_watchedPaths.push_back(gs);		
+	return gs;
 }
 
 void CDirWatcher::RemovePath(const wstring& path)

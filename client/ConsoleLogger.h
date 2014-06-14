@@ -8,8 +8,7 @@ using namespace std;
 class Logger
 {
 private:
-	static void WriteColorEx(int backColor, int foreColor, bool newLine, wstring text);
-	static void WriteColor(int foreColor, wstring text);
+	static void WriteColor(int backColor, int foreColor, bool newLine, wstring text);
 
 	enum {
 		FGCOLOR_FG_DARKBLUE = 1,
@@ -30,9 +29,9 @@ private:
 	};
 
 public:
-	static void LogError(wstring msg);
-	static void LogWarning(wstring msg);
-	static void LogMessage(wstring msg);
+	static void LogError(const wstring& msg);
+	static void LogWarning(const wstring& msg);
+	static void LogInfo(const wstring& msg);
 	Logger();
 	~Logger();
 };

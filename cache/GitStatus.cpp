@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include <codecvt>
 #include "GitStatus.h"
-#include "Logger.h"
+#include "DebugLogger.h"
 #include "git2.h"
 
 CGitStatus::CGitStatus(const wstring& startDir)
@@ -36,6 +36,7 @@ int CGitStatus::GitStatus_Callack(const char *path, unsigned int status_flags, v
 	wstring_convert<codecvt_utf8<wchar_t>> converter;
 	CGitFileStatus status(converter.from_bytes(path), status_flags);
 	that->m_fileList.push_back(status);
+	return 0;
 }
 
 void CGitStatus::Load()

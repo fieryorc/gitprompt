@@ -59,6 +59,10 @@
       <AdditionalDependencies>git2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\ext\build\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(SolutionDir)\ext\build\$(Configuration)\git2.dll $(TargetDir)
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -78,27 +82,34 @@
       <AdditionalDependencies>git2.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\ext\build\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
+    <PostBuildEvent>
+      <Command>copy $(SolutionDir)\ext\build\$(Configuration)\git2.dll $(TargetDir)
+</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\client\Logger.h" />
     <ClInclude Include="cache.h" />
+    <ClInclude Include="CacheService.h" />
     <ClInclude Include="DirWatcher.h" />
     <ClInclude Include="GitStatus.h" />
+    <ClInclude Include="DebugLogger.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="Utils\SmartHandle.h" />
     <ClInclude Include="Watcher\ReadDirectoryChanges.h" />
     <ClInclude Include="Watcher\ReadDirectoryChangesPrivate.h" />
     <ClInclude Include="Watcher\ThreadSafeQueue.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\client\Logger.cpp" />
     <ClCompile Include="cache.cpp" />
+    <ClCompile Include="CacheService.cpp" />
     <ClCompile Include="DirWatcher.cpp" />
     <ClCompile Include="GitStatus.cpp" />
+    <ClCompile Include="DebugLogger.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
