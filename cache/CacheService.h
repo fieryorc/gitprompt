@@ -1,35 +1,14 @@
 #pragma once
 #include "git2.h"
 #include "DirWatcher.h"
+#include "Message.h"
 
-/**
- * Request structure.
- */
-struct CacheServiceRequest
-{
-	DWORD request;
-	WCHAR path[MAX_PATH + 1];
-};
-
-// CustomActions will use this header but does not need nor understand the SVN types ...
-
-/**
- * The structure returned as a response
- */
-struct CacheServiceResponse
-{
-	DWORD state;
-	DWORD n_added;
-	DWORD n_modified;
-	DWORD n_deleted;
-};
-
+#define CACHE_NAME				L"\\\\.\\pipe\\GitPrompt"
+#define CACHE_MUTEX_NAME		L"GitPromptMutex"
 
 class CCacheService
 {
 private:
-	const wstring CACHE_NAME = L"\\\\.\\pipe\\GitPrompt";
-	const wstring CACHE_MUTEX_NAME = L"GitPromptMutex";
 	const int BUFSIZE = 4096;
 
 	static volatile LONG nThreadCount;

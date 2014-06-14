@@ -96,6 +96,7 @@
     <ClInclude Include="DirWatcher.h" />
     <ClInclude Include="GitStatus.h" />
     <ClInclude Include="DebugLogger.h" />
+    <ClInclude Include="Message.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
