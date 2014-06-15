@@ -27,24 +27,30 @@ class CGitStatus
 {
 public:
 
-	enum git_status {
-		GS_NORMAL,
-		GS_MODIFIED,
+	enum GitStatus {
+		GS_UNINITIALIZED,
+		GS_LOADED,
 		GS_ERROR,
 	};
 
-private:
-	wstring m_startDir;
-	git_status m_status;
-	wstring m_repoPath;
-	vector<CGitFileStatus> m_fileList;
-
-	void SetStatus(CGitStatus::git_status status);
-	static int GitStatus_Callack(const char *path, unsigned int status_flags, void *payload);
+	typedef enum {
+		GIT_REPOSITORY_STATE_NONE,
+		GIT_REPOSITORY_STATE_MERGE,
+		GIT_REPOSITORY_STATE_REVERT,
+		GIT_REPOSITORY_STATE_CHERRY_PICK,
+		GIT_REPOSITORY_STATE_BISECT,
+		GIT_REPOSITORY_STATE_REBASE,
+		GIT_REPOSITORY_STATE_REBASE_INTERACTIVE,
+		GIT_REPOSITORY_STATE_REBASE_MERGE,
+		GIT_REPOSITORY_STATE_APPLY_MAILBOX,
+		GIT_REPOSITORY_STATE_APPLY_MAILBOX_OR_REBASE,
+	} GitRepoState; 
 
 public:
 	CGitStatus(const wstring& startDir);
 	~CGitStatus();
+
+	static bool CGitStatus::GetRepoRoot(const wstring& path, wstring& repoRoot_out);
 
 	/**
 	 * Returns the Repository root.
@@ -59,5 +65,30 @@ public:
 	/**
 	 *  Returns the overall status of the repository.
 	 */
-	git_status GetStatus();
+	GitStatus GetStatus();
+
+	wstring& GetBranch();
+
+	int GetAddedFileCount();
+
+	int GetModifiedFileCount();
+
+	int GetDeletedFileCount();
+
+	GitRepoState GetRepoStatus();
+
+private:
+	wstring m_startDir;
+
+	GitRepoState m_repoState;
+	GitStatus m_status;
+	wstring m_repoPath;
+	wstring m_branch;
+	vector<CGitFileStatus> m_fileList;
+	int m_added;
+	int m_deleted;
+	int m_modified;
+
+	void SetStatus(CGitStatus::GitStatus status);
+	static int GitStatus_Callack(const char *path, unsigned int status_flags, void *payload);
 };

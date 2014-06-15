@@ -8,7 +8,7 @@ volatile LONG CCacheService::nThreadCount = 0;
 CCacheService* CCacheService::s_instance = nullptr;
 
 CCacheService::CCacheService()	
-	: m_dirWatcher(nullptr)
+	: m_dirWatcher()
 {
 }
 
@@ -195,10 +195,14 @@ DWORD WINAPI CCacheService::ThreadStart(LPVOID lpvParam)
 void CCacheService::ProcessRequest(CacheServiceRequest& request, CacheServiceResponse& response, int& responseLength)
 {
 	wstring path = request.path;
-	CGitStatus gs = CCacheService::Instance()->m_dirWatcher->GetStatus(path);
+	CGitStatus gs = CCacheService::Instance()->m_dirWatcher.GetStatus(path);
 	
 	SecureZeroMemory(&response, sizeof(response));
-	response.state = gs.GetStatus();	
+	response.state = gs.GetRepoStatus();
+	response.n_added = gs.GetAddedFileCount();
+	response.n_modified = gs.GetModifiedFileCount();
+	response.n_deleted = gs.GetDeletedFileCount();
+	gs.GetBranch().copy(response.branch, MAX_PATH);
 }
 
 

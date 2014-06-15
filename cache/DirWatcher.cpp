@@ -3,9 +3,7 @@
 #include <algorithm>
 #include <string>
 
-CDirWatcher::CDirWatcher()
-	: m_readDirChanges(),
-	  m_watchedPaths()
+CDirWatcher::CDirWatcher()	
 {
 
 }
@@ -21,7 +19,7 @@ CGitStatus* CDirWatcher::TryGetFromCache(const wstring& path)
 		return path.compare(gs->GetPath()) == 0;
 	});
 
-	return *result;
+	return result != this->m_watchedPaths.end() ? *result : nullptr;
 }
 
 CGitStatus* CDirWatcher::AddPath(const wstring& path)
@@ -50,10 +48,12 @@ void CDirWatcher::Stop()
 
 CGitStatus& CDirWatcher::GetStatus(const wstring& path)
 {
-	CGitStatus *gs = TryGetFromCache(path);
+	wstring repoRoot;
+	CGitStatus::GetRepoRoot(path, repoRoot);
+	CGitStatus *gs = TryGetFromCache(repoRoot);
 	if (gs != nullptr)
 		return *gs;
 
-	gs = AddPath(path);
+	gs = AddPath(repoRoot);
 	return *gs;
 }

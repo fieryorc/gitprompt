@@ -12,7 +12,7 @@ public:
 	bool GetStatus(const wstring& path, CacheServiceResponse& response);
 
 private:
-	bool InternalEnsurePipeOpen(HANDLE hPipe, const wstring& pipeName) const;
+	bool InternalEnsurePipeOpen(HANDLE& hPipe, const wstring& pipeName) const;
 
 	bool EnsurePipeOpen();
 	void ClosePipe();

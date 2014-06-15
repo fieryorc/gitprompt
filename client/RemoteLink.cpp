@@ -5,6 +5,8 @@
 #include "..\cache\CacheService.h"
 
 CRemoteLink::CRemoteLink(void)
+	: m_hPipe(0),
+	m_hEvent(0)	
 {
 	SecureZeroMemory(&m_Overlapped, sizeof(m_Overlapped));
 }
@@ -14,7 +16,7 @@ CRemoteLink::~CRemoteLink(void)
 	ClosePipe();
 }
 
-bool CRemoteLink::InternalEnsurePipeOpen(HANDLE hPipe
+bool CRemoteLink::InternalEnsurePipeOpen(HANDLE& hPipe
 	, const wstring& pipeName) const
 {
 	wstring_convert<codecvt_utf8<wchar_t>> converter;
@@ -61,7 +63,7 @@ bool CRemoteLink::InternalEnsurePipeOpen(HANDLE hPipe
 		{
 			Logger::LogError(converter.from_bytes(__FUNCTION__ ": SetNamedPipeHandleState failed"));
 			CloseHandle(hPipe);
-		}
+		}		
 	}
 
 	return hPipe != nullptr;

@@ -19,9 +19,11 @@ typedef struct type_CacheServiceRequest
 typedef struct type_CacheServiceResponse
 {
 	DWORD state;
+	DWORD repoStatus;
 	DWORD n_added;
 	DWORD n_modified;
 	DWORD n_deleted;
+	WCHAR branch[MAX_PATH + 1];
 } CacheServiceResponse;
 
 

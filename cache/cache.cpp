@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "cache.h"
+#include "CacheService.h"
 
 #define MAX_LOADSTRING 100
 
@@ -21,5 +22,7 @@ int APIENTRY _tWinMain(_In_ HINSTANCE hInstance,
 	// Initialize global strings
 	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 
+	CCacheService *instance = new CCacheService();
+	instance->Start();	
 	return 0;
 }
