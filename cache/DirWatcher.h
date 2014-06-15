@@ -12,10 +12,17 @@ private:
 
 	CGitStatus* TryGetFromCache(const wstring& path);
 
-	/**
-	* Add to the watch.
-	*/
-	CGitStatus* AddPath(const wstring& path);
+	void BeginWatch(CGitStatus *gs);
+	static DWORD WINAPI ThreadStart(LPVOID lpvParam);
+	CComCriticalSection m_critSec;
+
+	struct WaitObject
+	{
+		CDirWatcher *me;
+		CGitStatus *gs;
+		HANDLE threadInstance;
+		DWORD threadId;
+	};
 
 public:
 	CDirWatcher();
@@ -35,7 +42,7 @@ public:
 	/**
 	 * Gets the status of the given path.
 	 */
-	CGitStatus& GetStatus(const wstring& path);
+	CGitStatus* GetStatus(const wstring& path);
 
 	/**
 	* Stop the watcher.

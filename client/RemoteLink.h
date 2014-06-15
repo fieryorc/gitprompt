@@ -12,6 +12,7 @@ public:
 	bool GetStatus(const wstring& path, CacheServiceResponse& response);
 
 private:
+	const int PIPE_TIMEOUT = 60 * 1000;
 	bool InternalEnsurePipeOpen(HANDLE& hPipe, const wstring& pipeName) const;
 
 	bool EnsurePipeOpen();

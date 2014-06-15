@@ -28,5 +28,7 @@
 
 using namespace std;
 
+typedef CComCritSecLock<CComCriticalSection> CriticalSection;
+
 
 // TODO: reference additional headers your program requires here

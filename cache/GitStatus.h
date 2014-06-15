@@ -1,4 +1,6 @@
 #pragma once
+#include "Utils\SmartHandle.h"
+
 class CGitFileStatus
 {
 private:
@@ -28,7 +30,8 @@ class CGitStatus
 public:
 
 	enum GitStatus {
-		GS_UNINITIALIZED,
+		GS_NOTLOADED,
+		GS_LOADING,
 		GS_LOADED,
 		GS_ERROR,
 	};
@@ -76,19 +79,32 @@ public:
 	int GetDeletedFileCount();
 
 	GitRepoState GetRepoStatus();
-
+	
+	HANDLE GetHandle()
+	{
+		return this->m_waitHandle;
+	}
+	
 private:
-	wstring m_startDir;
+	CComCriticalSection m_critSec;
 
+	wstring m_startDir;
+	/**
+	 * .git directory.
+	 */
+	wstring m_gitDir;
+	wstring m_repoRoot;
 	GitRepoState m_repoState;
 	GitStatus m_status;
-	wstring m_repoPath;
 	wstring m_branch;
 	vector<CGitFileStatus> m_fileList;
 	int m_added;
 	int m_deleted;
 	int m_modified;
 
+	CAutoGeneralHandle m_waitHandle;
+
 	void SetStatus(CGitStatus::GitStatus status);
 	static int GitStatus_Callack(const char *path, unsigned int status_flags, void *payload);
+
 };
