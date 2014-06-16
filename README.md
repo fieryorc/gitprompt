@@ -29,18 +29,17 @@ Clone the repository with submodules
    
    git clone --recursive https://github.com/fieryorc/gitprompt.git
 
-Install cmake
-Install python (latest 2.x.x) 
+* Install cmake (latest 3.x.x)
+* Install python (latest 2.x.x) (Python 3.x.x will result in build error with libgit2.)
 
-cd ext
-md build
-cd build
-cmake ..\libgit2
-cmake --build .
+* cd ext
+* md build && cd build
+* cmake ..\libgit2
+* cmake --build .
 
 Alternatively you can open the libgit2.sln in visual studio to build. 
 By default cmake builds debug version. To build Release version, you need
-to open visual studio and change the configuration.
+to open visual studio and change the configuration and rebuild.
 
 Once libgit2 is built, You can open the gitprompt.sln in the root folder
 to build the gitprompt executables.
