@@ -88,7 +88,7 @@ DWORD WINAPI CDirectoryMonitor::ThreadStart(LPVOID lpvParam)
 	}
 
 	BOOL result = GetOverlappedResult(me->m_hDirectory, &me->m_overlapped, &dwBytes, TRUE);
-	me->Notify(result);
+	me->Notify((bool)result);
 	return 0;
 }
 

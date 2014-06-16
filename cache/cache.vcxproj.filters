@@ -13,12 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Source Files\Watcher">
-      <UniqueIdentifier>{0d7660b5-ff45-4c12-8e62-a84e72b2f1f4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Watcher">
-      <UniqueIdentifier>{61425578-2e23-41d1-b01c-393d940bf0e4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Utils">
       <UniqueIdentifier>{03be6840-242e-4f2e-b458-06386d874f73}</UniqueIdentifier>
     </Filter>
@@ -30,23 +24,11 @@
     <ClInclude Include="cache.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Watcher\ReadDirectoryChanges.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DirWatcher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="GitStatus.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Watcher\ReadDirectoryChangesPrivate.h">
-      <Filter>Header Files\Watcher</Filter>
-    </ClInclude>
-    <ClInclude Include="Watcher\ThreadSafeQueue.h">
-      <Filter>Header Files\Watcher</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>Header Files\Watcher</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
@@ -69,6 +51,9 @@
     <ClInclude Include="DirectoryMonitor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -76,12 +61,6 @@
     </ClCompile>
     <ClCompile Include="cache.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Watcher\ReadDirectoryChanges.cpp">
-      <Filter>Source Files\Watcher</Filter>
-    </ClCompile>
-    <ClCompile Include="Watcher\ReadDirectoryChangesPrivate.cpp">
-      <Filter>Source Files\Watcher</Filter>
     </ClCompile>
     <ClCompile Include="DirWatcher.cpp">
       <Filter>Source Files</Filter>

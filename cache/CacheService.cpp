@@ -97,13 +97,12 @@ void CCacheService::Start()
 
 			if (!hInstanceThread)
 			{
-				//OutputDebugStringA("TGitCache: Could not create Instance thread\n");
-				//DebugOutputLastError();
 				DisconnectNamedPipe(hPipe);
 				// since we're now closing this thread, we also have to close the whole application!
 				// otherwise the thread is dead, but the app is still running, refusing new instances
 				// but no pipe will be available anymore.
 				// PostMessage(hWnd, WM_CLOSE, 0, 0);
+				ExitProcess(2);
 				return;
 			}
 			// detach the handle, since we passed it to the thread
@@ -111,9 +110,6 @@ void CCacheService::Start()
 		}
 		else
 		{
-			// The client could not connect, so close the pipe.
-			//OutputDebugStringA("TGitCache: ConnectNamedPipe failed\n");
-			//DebugOutputLastError();
 			hPipe.CloseHandle();
 			Sleep(200);
 			continue;	// don't end the thread!
@@ -188,8 +184,6 @@ DWORD WINAPI CCacheService::ThreadStart(LPVOID lpvParam)
 	DisconnectNamedPipe(hPipe);
 	Logger::LogInfo(converter.from_bytes(__FUNCTION__ ": Instance thread exited\n"));
 	InterlockedDecrement(&nThreadCount);
-	//if (nThreadCount == 0)
-	//	PostMessage(hWnd, WM_CLOSE, 0, 0);
 	return 0;
 }
 
@@ -211,8 +205,6 @@ void CCacheService::ProcessRequest(CacheServiceRequest& request, CacheServiceRes
 
 void CCacheService::Stop()
 {
-	//delete this->m_dirWatcher;
-	//m_dirWatcher = nullptr;
 }
 
 CCacheService* CCacheService::Instance()
