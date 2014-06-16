@@ -59,6 +59,9 @@ This also starts GitPromptCache.exe process if not running already.
 
 CMDER 
 -----
+GitPrompt can be used to replace the default prompt that displays the branch and clean/dirty status.
+GitPrompt is much faster since it returns the cached restult most of the time.
+
 * Make sure GitPromptClient.exe, GitPromptCache.exe and git2.dll are in the same folder and also part of %path%.
 * Overwrite the %cmder_root%\config\git.lua file with install\cmder\git.lua file.
 
