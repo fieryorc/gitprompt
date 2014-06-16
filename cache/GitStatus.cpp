@@ -1,8 +1,11 @@
 #include "stdafx.h"
+#include <algorithm>
 #include <codecvt>
 #include "GitStatus.h"
 #include "DebugLogger.h"
 #include "git2.h"
+
+CMutex CGitStatus::m_mutex;
 
 CGitStatus::CGitStatus(const wstring& startDir)
 	: m_startDir(startDir)
@@ -102,6 +105,10 @@ void CGitStatus::Load()
 		::SetEvent(this->m_waitHandle);
 		return;
 	}
+
+	// This is temporary.
+	CMutexLock mutexLock(&m_mutex);
+
 	this->m_gitDir = converter.from_bytes(buf.ptr);
 
 	// Get current state of repo. (merge/rebase in progress etc)
@@ -157,6 +164,9 @@ void CGitStatus::DirectoryChangedCallback(CDirectoryMonitor::ChangeType type, vo
 
 bool CGitStatus::GetRepoRootInternal(const wstring& path, wstring& repoRoot_out, git_buf &buf, git_repository *&repo)
 {
+	// This is temporary.
+	CMutexLock mutexLock(&m_mutex);
+
 	SecureZeroMemory(&buf, sizeof(git_buf));
 	wstring_convert<codecvt_utf8<wchar_t>> converter;
 	string cpath = converter.to_bytes(path);
@@ -186,6 +196,8 @@ bool CGitStatus::GetRepoRootInternal(const wstring& path, wstring& repoRoot_out,
 	}
 
 	repoRoot_out = repoRootNormalized;
+	std::transform(repoRoot_out.begin(), repoRoot_out.end(), repoRoot_out.begin(), ::toupper);
+	
 	return true;
 }
 

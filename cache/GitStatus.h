@@ -2,6 +2,7 @@
 #include "Utils\SmartHandle.h"
 #include "DirectoryMonitor.h"
 #include "git2.h"
+#include "Utils\Mutex.h"
 
 class CGitFileStatus
 {
@@ -97,6 +98,12 @@ private:
 	CComCriticalSection m_critSec;
 	CDirectoryMonitor *m_dirMonitor;
 	wstring m_startDir;
+
+	/**
+	 * Libgit2 isn't multi threaded (yet!). For now, just allow one request to go through.
+	 */
+	static CMutex m_mutex;
+
 	/**
 	 * .git directory.
 	 */

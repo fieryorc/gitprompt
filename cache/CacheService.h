@@ -15,8 +15,8 @@ private:
 	static CCacheService* s_instance;
 
 
-	CDirWatcher m_dirWatcher;
 
+	CDirWatcher m_dirWatcher;
 	wstring CCacheService::GetCachePipeName();
 	wstring CCacheService::GetCacheCommandPipeName();
 	wstring CCacheService::GetCacheMutexName();
