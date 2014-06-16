@@ -26,13 +26,16 @@ BUILDING
 ========
 
 * Clone the repository with submodules
-   git clone --recursive https://github.com/fieryorc/gitprompt.git
+   *git clone --recursive https://github.com/fieryorc/gitprompt.git
 * Install cmake (latest 3.x.x)
 * Install python (latest 2.x.x) (Python 3.x.x will result in build error with libgit2.)
+* Run the following to build libgit2
+```Batchfile
 * cd ext
 * md build && cd build
 * cmake ..\libgit2
 * cmake --build .
+```
 
 Alternatively you can open the libgit2.sln in visual studio to build. 
 By default cmake builds debug version. To build Release version, you need
