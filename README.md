@@ -4,8 +4,6 @@ gitprompt
 (Windows) Suite of tools to display git status on the command prompt quickly. 
 This repository contains two C++ (Win32) executables. 
 
-TODO: Add powershell and cmder scripts to update the prompt.
-
 GitPromptCache.exe
 ------------------
 
@@ -51,8 +49,26 @@ to build the gitprompt executables.
 RUNNING
 =======
 
-Run GitPromptClient.exe from the directory you want to show the git status for.
+You can run Debug\GitPromptClient.exe or Release\GitPromptClient.exe from the
+directory you want to show the git status for. This will print the status of
+the repository.
+
+Note:
 This also starts GitPromptCache.exe process if not running already.
+
+
+CMDER 
+-----
+* Make sure GitPromptClient.exe, GitPromptCache.exe and git2.dll are in the same folder and also part of %path%.
+* Overwrite the %cmder_root%\config\git.lua file with install\cmder\git.lua file.
+
+
+POWERSHELL
+----------
+Work in progress
+
+
+
    
 
 
