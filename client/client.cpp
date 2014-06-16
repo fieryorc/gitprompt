@@ -4,9 +4,42 @@
 #include "stdafx.h"
 #include <iostream>
 #include <codecvt>
+#include <algorithm>
 #include "git2.h"
 #include "ConsoleLogger.h"
 #include "RemoteLink.h"
+#include <TlHelp32.h>
+#include <WinBase.h>
+#include <process.h>
+
+void killProcessByName(const wstring& name)
+{
+	HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
+	PROCESSENTRY32 pEntry;
+	pEntry.dwSize = sizeof(pEntry);
+	BOOL hRes = Process32First(hSnapShot, &pEntry);
+	wstring nameToMatch = name;
+	std::transform(nameToMatch.begin(), nameToMatch.end(), nameToMatch.begin(), ::toupper);
+
+	while (hRes)
+	{
+		wstring procName = pEntry.szExeFile;
+		std::transform(procName.begin(), procName.end(), procName.begin(), ::toupper);
+
+		if (procName == nameToMatch)
+		{
+			HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0,
+				(DWORD)pEntry.th32ProcessID);
+			if (hProcess != NULL)
+			{
+				TerminateProcess(hProcess, 9);
+				CloseHandle(hProcess);
+			}
+		}
+		hRes = Process32Next(hSnapShot, &pEntry);
+	}
+	CloseHandle(hSnapShot);
+}
 
 int _tmain(int argc, _TCHAR* argv[])
 {
@@ -29,7 +62,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	CacheServiceResponse response;
 	remoteLink.GetStatus(currentDir, response);
-	
+
 	wprintf(L"(%s) [+%d, -%d, ~%d]", response.branch, response.n_added, response.n_deleted, response.n_modified);
 	return 0;
 }
+

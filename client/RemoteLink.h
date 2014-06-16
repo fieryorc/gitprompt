@@ -2,6 +2,9 @@
 #include "stdafx.h"
 #include "..\cache\Message.h"
 
+#define CACHE_PROCESS_NAME L"GITPROMPTCACHE.EXE"
+
+
 class CRemoteLink
 {
 public:
@@ -19,7 +22,7 @@ private:
 	void ClosePipe();
 
 	DWORD GetProcessIntegrityLevel() const;
-	bool RunCacheServiceProcess();
+	bool EnsureCacheServiceProcess();
 	wstring CRemoteLink::GetCachePipeName();
 	wstring CRemoteLink::GetCacheMutexName();
 	wstring CRemoteLink::GetCacheID();

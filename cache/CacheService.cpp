@@ -74,9 +74,8 @@ void CCacheService::Start()
 
 		if (!hPipe)
 		{
-			Logger::LogError(L"Unable to create pipe. Continuing...");
-			Sleep(200);
-			continue;
+			Logger::LogError(L"Unable to create pipe. Exiting..");
+			return;
 		}
 
 		// Wait for the client to connect; if it succeeds,

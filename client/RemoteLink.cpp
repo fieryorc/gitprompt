@@ -3,9 +3,12 @@
 #include "ConsoleLogger.h"
 #include <memory>
 #include "..\cache\CacheService.h"
+#include <TlHelp32.h>
+#include <WinBase.h>
+#include <process.h>
 
 CRemoteLink::CRemoteLink(void)
-	: m_hPipe(0),
+	: m_hPipe(INVALID_HANDLE_VALUE),
 	m_hEvent(0)	
 {
 	SecureZeroMemory(&m_Overlapped, sizeof(m_Overlapped));
@@ -13,19 +16,19 @@ CRemoteLink::CRemoteLink(void)
 
 CRemoteLink::~CRemoteLink(void)
 {
-	ClosePipe();
+	//ClosePipe();
 }
 
 bool CRemoteLink::InternalEnsurePipeOpen(HANDLE& hPipe
 	, const wstring& pipeName) const
 {
 	wstring_convert<codecvt_utf8<wchar_t>> converter;
-	if (hPipe)
+	if (hPipe != INVALID_HANDLE_VALUE)
 		return true;
 
 	int tryleft = 2;
 
-	while (!hPipe && tryleft--)
+	while (hPipe == INVALID_HANDLE_VALUE && tryleft--)
 	{
 
 		hPipe = CreateFile(
@@ -37,11 +40,9 @@ bool CRemoteLink::InternalEnsurePipeOpen(HANDLE& hPipe
 			OPEN_EXISTING,                  // opens existing pipe
 			FILE_FLAG_OVERLAPPED,           // default attributes
 			NULL);                          // no template file
-		if ((!hPipe) && (GetLastError() == ERROR_PIPE_BUSY))
+		if ((hPipe != INVALID_HANDLE_VALUE) && (GetLastError() == ERROR_PIPE_BUSY))
 		{
-			// TGitCache is running but is busy connecting a different client.
-			// Do not give up immediately but wait for a few milliseconds until
-			// the server has created the next pipe instance
+			// Service is busy connecting a different client.
 			if (!WaitNamedPipe(pipeName.c_str(), 50))
 			{
 				continue;
@@ -49,7 +50,7 @@ bool CRemoteLink::InternalEnsurePipeOpen(HANDLE& hPipe
 		}
 	}
 
-	if (hPipe)
+	if (hPipe != INVALID_HANDLE_VALUE)
 	{
 		// The pipe connected; change to message-read mode.
 		DWORD dwMode;
@@ -66,7 +67,7 @@ bool CRemoteLink::InternalEnsurePipeOpen(HANDLE& hPipe
 		}		
 	}
 
-	return hPipe != nullptr;
+	return hPipe != INVALID_HANDLE_VALUE;
 }
 
 bool CRemoteLink::EnsurePipeOpen()
@@ -106,10 +107,11 @@ bool CRemoteLink::GetStatus(const wstring& path, CacheServiceResponse& response)
 		if (GetProcessIntegrityLevel() < SECURITY_MANDATORY_MEDIUM_RID)
 			return false;
 
-		if (!RunCacheServiceProcess())
+		if (!EnsureCacheServiceProcess())
 			return false;
 
-		// TODO: Retry?
+		if (!EnsurePipeOpen())
+			return false;
 	}
 
 	DWORD nBytesRead;
@@ -203,8 +205,53 @@ DWORD CRemoteLink::GetProcessIntegrityLevel() const
 	return dwIntegrityLevel;
 }
 
-bool CRemoteLink::RunCacheServiceProcess()
+bool CRemoteLink::EnsureCacheServiceProcess()
 {
+	HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, NULL);
+	PROCESSENTRY32 pEntry;
+	pEntry.dwSize = sizeof(pEntry);
+	BOOL hRes = Process32First(hSnapShot, &pEntry);
+	bool found = false;
+	while (hRes)
+	{
+		wstring procName = pEntry.szExeFile;
+		std::transform(procName.begin(), procName.end(), procName.begin(), ::toupper);
+
+		if (procName == CACHE_PROCESS_NAME)
+		{
+			HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0,
+				(DWORD)pEntry.th32ProcessID);
+			if (hProcess != NULL)
+			{
+				// Process is running.
+				found = true;
+				break;
+			}
+		}
+		hRes = Process32Next(hSnapShot, &pEntry);
+	}
+	CloseHandle(hSnapShot);
+
+	if (!found)
+	{
+		vector<wchar_t> fileNameBuffer(MAX_PATH + 1);
+		int length = GetModuleFileName(NULL, &fileNameBuffer[0], MAX_PATH + 1);
+		wstring fileName(&fileNameBuffer[0], length);
+		wstring exeDir = fileName.substr(0, fileName.find_last_of(L"/\\"));
+		wstring exeFilePath = exeDir + L"\\" + CACHE_PROCESS_NAME;
+
+		STARTUPINFO startupInfo;
+		ZeroMemory(&startupInfo, sizeof(startupInfo));
+		GetStartupInfo(&startupInfo);
+		PROCESS_INFORMATION procInfo;
+		if (!CreateProcess(exeFilePath.c_str(), NULL, NULL, NULL, FALSE, NORMAL_PRIORITY_CLASS, NULL, exeDir.c_str(), &startupInfo, &procInfo))
+		{
+			Logger::LogError(L"Unable to run cache service.");
+			return false;
+		}
+		Sleep(2000);
+	}
+
 	return true;
 }
 

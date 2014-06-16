@@ -17,6 +17,7 @@
 #include <memory.h>
 #include <tchar.h>
 #include <codecvt>
+#include <algorithm>
 
 #define _ATL_CSTRING_EXPLICIT_CONSTRUCTORS      // some CString constructors will be explicit
 
