@@ -35,7 +35,8 @@ CGitStatus* CDirWatcher::GetFromCache(const wstring& repoRootDir)
 CGitStatus* CDirWatcher::GetStatus(const wstring& path)
 {
 	wstring repoRoot;
-	CGitStatus::GetRepoRoot(path, repoRoot);
+	if (!CGitStatus::GetRepoRoot(path, repoRoot))
+		return nullptr;
 	CGitStatus *gs = GetFromCache(repoRoot);
 
 	gs->Load();

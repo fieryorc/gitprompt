@@ -185,6 +185,12 @@ bool CGitStatus::GetRepoRootInternal(const wstring& path, wstring& repoRoot_out,
 	}
 
 	const char* workDir = git_repository_workdir(repo);
+	if (workDir == nullptr)
+	{
+		Logger::LogWarning(_T("No working directory. Probably bare repository."));
+		git_buf_free(&buf);
+		return false;
+	}
 	wstring repoRoot = converter.from_bytes(workDir);
 
 	TCHAR repoRootNormalized[MAX_PATH + 1];
