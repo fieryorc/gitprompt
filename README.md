@@ -25,13 +25,10 @@ where A - Added count, D - Deleted count, M - Modified count.
 BUILDING
 ========
 
-Clone the repository with submodules
-   
+* Clone the repository with submodules
    git clone --recursive https://github.com/fieryorc/gitprompt.git
-
 * Install cmake (latest 3.x.x)
 * Install python (latest 2.x.x) (Python 3.x.x will result in build error with libgit2.)
-
 * cd ext
 * md build && cd build
 * cmake ..\libgit2
