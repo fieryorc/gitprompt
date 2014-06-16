@@ -31,17 +31,16 @@ BUILDING
 * Install python (latest 2.x.x) (Python 3.x.x will result in build error with libgit2.)
 * Run the following to build libgit2
 ```Batchfile
-* cd ext
-* md build && cd build
-* cmake ..\libgit2
-* cmake --build .
+cd ext
+md build && cd build
+cmake ..\libgit2
+:: Choose one of the following (or both if you intend to compile both release and debug)
+cmake --build . --config Debug
+cmake --build . --config Release
 ```
 
-Alternatively you can open the libgit2.sln in visual studio to build. 
-By default cmake builds debug version. To build Release version, you need
-to open visual studio and change the configuration and rebuild.
-
-Once libgit2 is built, You can open the gitprompt.sln in the root folder
+Alternatively you can open the libgit2.sln in visual studio to build.
+Once libgit2 is built successfully, You can open the gitprompt.sln in the root folder
 to build the gitprompt executables.
 
 
