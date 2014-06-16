@@ -1,18 +1,21 @@
 gitprompt
 =========
 
-(Windows) Display git status on the command prompt quickly. 
+(Windows) Suite of tools to display git status on the command prompt quickly. 
 This repository contains two C++ (Win32) executables. 
 
+TODO: Add powershell and cmder scripts to update the prompt.
+
 GitPromptCache.exe
-==================
+------------------
 
    This is the long running cache service that caches the git status information. 
 It also listens to file system change, and invalidates the cache. Also opens a named
 pipe so clients can talk to it.
 
 GitPromptClient.exe
-==================
+-------------------
+
    This is a client program that is responsible for starting the cache service if it is not
 running already. Once service is started, client talks to the service to get the status information to display.
  The output is dipslayed in the following format:
