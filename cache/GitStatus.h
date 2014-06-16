@@ -1,5 +1,7 @@
 #pragma once
 #include "Utils\SmartHandle.h"
+#include "DirectoryMonitor.h"
+#include "git2.h"
 
 class CGitFileStatus
 {
@@ -30,10 +32,16 @@ class CGitStatus
 public:
 
 	enum GitStatus {
+		// Not initialized.
 		GS_NOTLOADED,
+		// Currently loading in progress.
 		GS_LOADING,
+		// Valid state. 
 		GS_LOADED,
+		// Error during loading
 		GS_ERROR,
+		// Invalidated by directory watcher. However, the current content may still be usable.
+		GS_INVALIDATED
 	};
 
 	typedef enum {
@@ -87,7 +95,7 @@ public:
 	
 private:
 	CComCriticalSection m_critSec;
-
+	CDirectoryMonitor *m_dirMonitor;
 	wstring m_startDir;
 	/**
 	 * .git directory.
@@ -103,8 +111,11 @@ private:
 	int m_modified;
 
 	CAutoGeneralHandle m_waitHandle;
-
+	void InitState();
 	void SetStatus(CGitStatus::GitStatus status);
 	static int GitStatus_Callack(const char *path, unsigned int status_flags, void *payload);
+	static bool CGitStatus::GetRepoRootInternal(const wstring& path, wstring& repoRoot_out, git_buf &buf, git_repository *&repo);
+	static void DirectoryChangedCallback(CDirectoryMonitor::ChangeType type, void *context);
+	void MonitorForChanges();
 
 };

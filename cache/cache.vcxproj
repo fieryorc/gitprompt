@@ -93,6 +93,7 @@
   <ItemGroup>
     <ClInclude Include="cache.h" />
     <ClInclude Include="CacheService.h" />
+    <ClInclude Include="DirectoryMonitor.h" />
     <ClInclude Include="DirWatcher.h" />
     <ClInclude Include="GitStatus.h" />
     <ClInclude Include="DebugLogger.h" />
@@ -108,6 +109,7 @@
   <ItemGroup>
     <ClCompile Include="cache.cpp" />
     <ClCompile Include="CacheService.cpp" />
+    <ClCompile Include="DirectoryMonitor.cpp" />
     <ClCompile Include="DirWatcher.cpp" />
     <ClCompile Include="GitStatus.cpp" />
     <ClCompile Include="DebugLogger.cpp" />
