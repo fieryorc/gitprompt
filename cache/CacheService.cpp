@@ -193,6 +193,7 @@ void CCacheService::ProcessRequest(CacheServiceRequest& request, CacheServiceRes
 	SecureZeroMemory(&response, sizeof(response));
 	if (gs != nullptr)
 	{
+		response.isSuccess = gs->GetStatus() == CGitStatus::GS_LOADED;
 		response.state = gs->GetRepoStatus();
 		response.n_added = gs->GetAddedFileCount();
 		response.n_modified = gs->GetModifiedFileCount();

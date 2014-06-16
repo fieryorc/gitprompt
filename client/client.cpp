@@ -62,8 +62,11 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	CacheServiceResponse response;
 	remoteLink.GetStatus(currentDir, response);
-
-	wprintf(L"(%s) [+%d, -%d, ~%d]", response.branch, response.n_added, response.n_deleted, response.n_modified);
-	return 0;
+	if (response.isSuccess)
+	{
+		wprintf(L"(%s) [+%d, -%d, ~%d]", response.branch, response.n_added, response.n_deleted, response.n_modified);
+		return 0;
+	}
+	return 1;
 }
 

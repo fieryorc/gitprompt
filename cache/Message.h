@@ -18,6 +18,8 @@ typedef struct type_CacheServiceRequest
  */
 typedef struct type_CacheServiceResponse
 {
+	DWORD isSuccess;
+	// State specifying any operation in progress
 	DWORD state;
 	DWORD repoStatus;
 	DWORD n_added;
