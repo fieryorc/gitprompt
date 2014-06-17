@@ -22,8 +22,7 @@ function git_prompt_filter()
 
     if details then
 
-        local branch = string.match(details, "%((.+)%)")
-        local addedIndex, deletedIndex, modifiedIndex, addedWorkdir, deletedWorkdir, modifiedWorkdir  = string.match(details, "i%[%+(%d+), %-(%d), %~(%d)%] w%[%+(%d+), %-(%d), %~(%d)%]")
+        local branch, addedIndex, deletedIndex, modifiedIndex, addedWorkdir, deletedWorkdir, modifiedWorkdir  = string.match(details, "%((.*)%) i%[%+(%d+), %-(%d), %~(%d)%] w%[%+(%d+), %-(%d), %~(%d)%] (.*)")
 
         local added = addedIndex + addedWorkdir
         local deleted = deletedIndex + deletedWorkdir
