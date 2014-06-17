@@ -68,8 +68,13 @@ GitPrompt is much faster since it returns the cached restult most of the time.
 
 POWERSHELL
 ----------
-Work in progress
+For powershell, I have modified version of posh-git that you can install. This uses gitprompt to display the status prompt which will be much improved experience over the original posh-git implementation. 
 
+https://github.com/fieryorc/posh-git
+
+
+
+Goal is to make gitprompt part of cmder and posh-git default releases. I will make pull request once sufficient testing is done.
 
 
    
