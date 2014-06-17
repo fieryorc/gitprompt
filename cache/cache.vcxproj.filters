@@ -24,9 +24,6 @@
     <ClInclude Include="cache.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DirWatcher.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GitStatus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -57,15 +54,15 @@
     <ClInclude Include="Utils\Mutex.h">
       <Filter>Header Files\Utils</Filter>
     </ClInclude>
+    <ClInclude Include="GitStatusList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="cache.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DirWatcher.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GitStatus.cpp">
@@ -78,6 +75,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DirectoryMonitor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GitStatusList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -9,7 +9,7 @@ CCacheService* CCacheService::s_instance = nullptr;
 
 
 CCacheService::CCacheService()	
-	: m_dirWatcher()
+	: m_gitStatusList()
 {
 }
 
@@ -189,17 +189,10 @@ DWORD WINAPI CCacheService::ThreadStart(LPVOID lpvParam)
 void CCacheService::ProcessRequest(CacheServiceRequest& request, CacheServiceResponse& response, int& responseLength)
 {
 	wstring path = request.path;
-	CGitStatus *gs = CCacheService::Instance()->m_dirWatcher.GetStatus(path);
-	SecureZeroMemory(&response, sizeof(response));
+	CGitStatus *gs = CCacheService::Instance()->m_gitStatusList.GetStatus(path);
+	ZeroMemory(&response, sizeof(response));
 	if (gs != nullptr)
-	{
-		response.isSuccess = gs->GetStatus() == CGitStatus::GS_LOADED;
-		response.state = gs->GetRepoStatus();
-		response.n_added = gs->GetAddedFileCount();
-		response.n_modified = gs->GetModifiedFileCount();
-		response.n_deleted = gs->GetDeletedFileCount();
-		gs->GetBranch().copy(response.branch, MAX_PATH);
-	}
+		gs->GetRepoStatus(response);
 }
 
 

@@ -1,22 +1,22 @@
 #include "stdafx.h"
-#include "DirWatcher.h"
+#include "GitStatusList.h"
 #include "DebugLogger.h"
 
 #include <algorithm>
 #include <string>
 
-CDirWatcher::CDirWatcher()
+CGitStatusList::CGitStatusList()
 {
 	this->m_critSec.Init();
 }
 
 
-CDirWatcher::~CDirWatcher()
+CGitStatusList::~CGitStatusList()
 {
 	m_critSec.Term();
 }
 
-CGitStatus* CDirWatcher::GetFromCache(const wstring& repoRootDir)
+CGitStatus* CGitStatusList::GetFromCache(const wstring& repoRootDir)
 {
 	CriticalSection lock(this->m_critSec);
 	auto result = std::find_if(this->m_watchedPaths.begin(), this->m_watchedPaths.end(), [repoRootDir](CGitStatus* gs) {
@@ -32,13 +32,12 @@ CGitStatus* CDirWatcher::GetFromCache(const wstring& repoRootDir)
 	return gs;
 }
 
-CGitStatus* CDirWatcher::GetStatus(const wstring& path)
+CGitStatus* CGitStatusList::GetStatus(const wstring& path)
 {
 	wstring repoRoot;
 	if (!CGitStatus::GetRepoRoot(path, repoRoot))
 		return nullptr;
 	CGitStatus *gs = GetFromCache(repoRoot);
-
-	gs->Load();
+		
 	return gs;
 }

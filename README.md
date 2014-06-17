@@ -4,6 +4,8 @@ gitprompt
 (Windows) Suite of tools to display git status on the command prompt quickly. 
 This repository contains two C++ (Win32) executables. 
 
+Download the latest binaries for Windows here: https://github.com/fieryorc/gitprompt/releases
+
 GitPromptCache.exe
 ------------------
 

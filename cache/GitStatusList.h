@@ -3,7 +3,7 @@
 
 #include "GitStatus.h"
 
-class CDirWatcher
+class CGitStatusList
 {
 private:
 	CComCriticalSection m_critSec;
@@ -12,8 +12,8 @@ private:
 	CGitStatus* GetFromCache(const wstring& path);
 
 public:
-	CDirWatcher();
-	~CDirWatcher();
+	CGitStatusList();
+	~CGitStatusList();
 
 	/**
 	 * Gets the status of the given path.

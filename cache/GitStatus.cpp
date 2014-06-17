@@ -27,9 +27,16 @@ CGitStatus::~CGitStatus()
 
 void CGitStatus::InitState()
 {
-	this->m_added = 0;
-	this->m_modified = 0;
-	this->m_deleted = 0;
+	this->m_addedIndex = 0;
+	this->m_modifiedIndex = 0;
+	this->m_deletedIndex = 0;
+
+	this->m_addedWorkDir = 0;
+	this->m_modifiedWorkDir= 0;
+	this->m_deletedWorkDir= 0;
+
+	this->m_branch.clear();
+	this->m_fileList.clear();
 	this->m_repoState = GIT_REPOSITORY_STATE_NONE;
 }
 
@@ -46,23 +53,20 @@ int CGitStatus::GitStatus_Callack(const char *path, unsigned int status_flags, v
 	CGitFileStatus status(converter.from_bytes(path), status_flags);
 	that->m_fileList.push_back(status);
 
-	if (status_flags & GIT_STATUS_INDEX_NEW ||
-		status_flags & GIT_STATUS_WT_NEW)
-	{
-		that->m_added++;
-	}
+	if (status_flags & GIT_STATUS_INDEX_NEW)
+		that->m_addedIndex++;
+	if (status_flags & GIT_STATUS_WT_NEW)
+		that->m_addedWorkDir++;
 
-	if (status_flags & GIT_STATUS_INDEX_MODIFIED ||
-		status_flags & GIT_STATUS_WT_MODIFIED)
-	{
-		that->m_modified++;
-	}
+	if (status_flags & GIT_STATUS_INDEX_MODIFIED)
+		that->m_modifiedIndex++;
+	if (status_flags & GIT_STATUS_WT_MODIFIED)
+		that->m_modifiedWorkDir++;
 
-	if (status_flags & GIT_STATUS_INDEX_DELETED ||
-		status_flags & GIT_STATUS_WT_DELETED)
-	{
-		that->m_deleted++;
-	}
+	if (status_flags & GIT_STATUS_INDEX_DELETED)
+		that->m_deletedIndex++;
+	if (status_flags & GIT_STATUS_WT_DELETED)
+		that->m_deletedWorkDir++;
 
 	return 0;
 }
@@ -230,27 +234,23 @@ wstring& CGitStatus::GetPath()
 	return this->m_repoRoot;
 }
 
-wstring& CGitStatus::GetBranch()
+bool CGitStatus::GetRepoStatus(CacheServiceResponse& out)
 {
-	return this->m_branch;
-}
+	ZeroMemory(&out, sizeof(out));
 
-int CGitStatus::GetAddedFileCount()
-{
-	return this->m_added;
-}
-
-int CGitStatus::GetModifiedFileCount()
-{
-	return this->m_modified;
-}
-
-int CGitStatus::GetDeletedFileCount()
-{
-	return this->m_deleted;
-}
-
-CGitStatus::GitRepoState CGitStatus::GetRepoStatus()
-{
-	return this->m_repoState;
+	this->Load();
+	this->m_branch.copy(out.branch, sizeof(out.branch), 0);
+	bool isSuccess = this->GetStatus() == GS_LOADED || this->GetStatus() == GS_INVALIDATED;
+	if (isSuccess)
+	{
+		out.n_addedIndex = this->m_addedIndex;
+		out.n_addedWorkDir = this->m_addedWorkDir;
+		out.n_deletedIndex = this->m_deletedIndex;
+		out.n_deletedWorkDir = this->m_deletedWorkDir;
+		out.n_modifiedIndex = this->m_modifiedIndex;
+		out.n_modifiedWorkDir = this->m_modifiedWorkDir;
+		out.state = this->m_repoState;
+	}
+	out.isSuccess = (BOOL)isSuccess;
+	return isSuccess;
 }

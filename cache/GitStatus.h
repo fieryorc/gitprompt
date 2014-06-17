@@ -3,6 +3,7 @@
 #include "DirectoryMonitor.h"
 #include "git2.h"
 #include "Utils\Mutex.h"
+#include "Message.h"
 
 class CGitFileStatus
 {
@@ -69,30 +70,15 @@ public:
 	 */
 	wstring& GetPath();
 
-	/**
-	 * Load the status. 
-	 */
-	void Load();
 
 	/**
-	 *  Returns the overall status of the repository.
+	 *  Gets the status of the repository.
+	 *  Waits if the status is not loaded yet. 
+	 *  Returns true on success, false otherwise.
 	 */
+	bool GetRepoStatus(CacheServiceResponse &status);
+
 	GitStatus GetStatus();
-
-	wstring& GetBranch();
-
-	int GetAddedFileCount();
-
-	int GetModifiedFileCount();
-
-	int GetDeletedFileCount();
-
-	GitRepoState GetRepoStatus();
-	
-	HANDLE GetHandle()
-	{
-		return this->m_waitHandle;
-	}
 	
 private:
 	CComCriticalSection m_critSec;
@@ -112,12 +98,21 @@ private:
 	GitRepoState m_repoState;
 	GitStatus m_status;
 	wstring m_branch;
+	int m_addedIndex;
+	int m_deletedIndex;
+	int m_modifiedIndex;
+	int m_addedWorkDir;
+	int m_deletedWorkDir;
+	int m_modifiedWorkDir;
 	vector<CGitFileStatus> m_fileList;
-	int m_added;
-	int m_deleted;
-	int m_modified;
 
 	CAutoGeneralHandle m_waitHandle;
+
+	/**
+	* Load the status.
+	*/
+	void Load();
+
 	void InitState();
 	void SetStatus(CGitStatus::GitStatus status);
 	static int GitStatus_Callack(const char *path, unsigned int status_flags, void *payload);

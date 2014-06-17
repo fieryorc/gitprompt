@@ -64,7 +64,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	remoteLink.GetStatus(currentDir, response);
 	if (response.isSuccess)
 	{
-		wprintf(L"(%s) [+%d, -%d, ~%d]", response.branch, response.n_added, response.n_deleted, response.n_modified);
+		wprintf(L"(%s) i[+%d, -%d, ~%d] w[+%d, -%d, ~%d]", response.branch, response.n_addedIndex, response.n_deletedIndex, response.n_modifiedIndex, response.n_addedWorkDir, response.n_deletedWorkDir, response.n_modifiedWorkDir);
 		return 0;
 	}
 	return 1;

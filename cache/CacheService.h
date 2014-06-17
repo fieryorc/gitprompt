@@ -1,6 +1,6 @@
 #pragma once
 #include "git2.h"
-#include "DirWatcher.h"
+#include "GitStatusList.h"
 #include "Message.h"
 
 #define CACHE_NAME				L"\\\\.\\pipe\\GitPrompt"
@@ -16,7 +16,7 @@ private:
 
 
 
-	CDirWatcher m_dirWatcher;
+	CGitStatusList m_gitStatusList;
 	wstring CCacheService::GetCachePipeName();
 	wstring CCacheService::GetCacheCommandPipeName();
 	wstring CCacheService::GetCacheMutexName();
