@@ -116,7 +116,7 @@ void CGitStatus::Load()
 	this->m_gitDir = converter.from_bytes(buf.ptr);
 
 	// Get current state of repo. (merge/rebase in progress etc)
-	int state = git_repository_state(repo);
+	this->m_repoState = git_repository_state(repo);
 
 	// Get branch info.
 	git_reference *ref;
@@ -135,8 +135,6 @@ void CGitStatus::Load()
 	git_status_init_options(&opts, GIT_STATUS_OPTIONS_VERSION);
 	opts.flags = GIT_STATUS_OPT_INCLUDE_UNTRACKED | GIT_STATUS_OPT_EXCLUDE_SUBMODULES;
 	git_status_foreach_ext(repo, &opts, &GitStatus_Callack, this);
-
-	this->m_repoState = (GitRepoState)state;
 
 	// Free stuff
 	git_buf_free(&buf);

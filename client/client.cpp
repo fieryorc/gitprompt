@@ -41,6 +41,49 @@ void killProcessByName(const wstring& name)
 	CloseHandle(hSnapShot);
 }
 
+const wstring GetState(const CacheServiceResponse& response)
+{
+	wstring result;
+	DWORD status = response.state;
+	switch (response.state)
+	{
+	case GIT_REPOSITORY_STATE_NONE:
+		result = L"";
+		break;
+	case GIT_REPOSITORY_STATE_MERGE:
+		result = L"Merge";
+		break;
+	case GIT_REPOSITORY_STATE_REVERT:
+		result = L"Revert";
+		break;
+	case GIT_REPOSITORY_STATE_CHERRY_PICK:
+		result = L"Cherry-pick";
+		break;
+	case GIT_REPOSITORY_STATE_BISECT:
+		result = L"Bisect";
+		break;
+	case GIT_REPOSITORY_STATE_REBASE:
+		result = L"Rebase";
+		break;
+	case GIT_REPOSITORY_STATE_REBASE_INTERACTIVE:
+		result = L"Rebase-i";
+		break;
+	case GIT_REPOSITORY_STATE_REBASE_MERGE:
+		result = L"Rebase-Merge";
+		break;
+	case GIT_REPOSITORY_STATE_APPLY_MAILBOX:
+		result = L"Apply-Mailbox";
+		break;
+	case GIT_REPOSITORY_STATE_APPLY_MAILBOX_OR_REBASE:
+		result = L"Apply-Mailbox/Rebase";
+		break;
+	default:
+		result = L"unknown";
+		break;
+	}
+	return result;		
+}
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	CRemoteLink remoteLink;
@@ -62,9 +105,14 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	CacheServiceResponse response;
 	remoteLink.GetStatus(currentDir, response);
+	wstring_convert<codecvt_utf8<wchar_t>> converter;
+	wstring branch(response.branch);
 	if (response.isSuccess)
 	{
-		wprintf(L"(%s) i[+%d, -%d, ~%d] w[+%d, -%d, ~%d]", response.branch, response.n_addedIndex, response.n_deletedIndex, response.n_modifiedIndex, response.n_addedWorkDir, response.n_deletedWorkDir, response.n_modifiedWorkDir);
+		UINT codePage = 65001; // UTF-8
+		if (IsValidCodePage(codePage))
+			SetConsoleOutputCP(codePage);
+		wprintf(L"(%S) i[+%d, -%d, ~%d] w[+%d, -%d, ~%d] (%s)", converter.to_bytes(branch).c_str(), response.n_addedIndex, response.n_deletedIndex, response.n_modifiedIndex, response.n_addedWorkDir, response.n_deletedWorkDir, response.n_modifiedWorkDir, GetState(response).c_str());
 		return 0;
 	}
 	return 1;

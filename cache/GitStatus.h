@@ -46,19 +46,6 @@ public:
 		GS_INVALIDATED
 	};
 
-	typedef enum {
-		GIT_REPOSITORY_STATE_NONE,
-		GIT_REPOSITORY_STATE_MERGE,
-		GIT_REPOSITORY_STATE_REVERT,
-		GIT_REPOSITORY_STATE_CHERRY_PICK,
-		GIT_REPOSITORY_STATE_BISECT,
-		GIT_REPOSITORY_STATE_REBASE,
-		GIT_REPOSITORY_STATE_REBASE_INTERACTIVE,
-		GIT_REPOSITORY_STATE_REBASE_MERGE,
-		GIT_REPOSITORY_STATE_APPLY_MAILBOX,
-		GIT_REPOSITORY_STATE_APPLY_MAILBOX_OR_REBASE,
-	} GitRepoState; 
-
 public:
 	CGitStatus(const wstring& startDir);
 	~CGitStatus();
@@ -95,7 +82,12 @@ private:
 	 */
 	wstring m_gitDir;
 	wstring m_repoRoot;
-	GitRepoState m_repoState;
+	
+	/** Enum indicating the repository state. (refer to: git_repository_state_t)
+	 * This indicates if any merge/rebase/etc operation in progress.
+	 */
+	DWORD m_repoState;
+
 	GitStatus m_status;
 	wstring m_branch;
 	int m_addedIndex;
