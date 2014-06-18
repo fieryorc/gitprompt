@@ -162,6 +162,8 @@ void CGitStatus::DirectoryChangedCallback(CDirectoryMonitor::ChangeType type, vo
 	CGitStatus *me = (CGitStatus*)context;
 	CriticalSection(me->m_critSec);
 	me->SetStatus(GS_INVALIDATED);
+	delete me->m_dirMonitor;
+	me->m_dirMonitor = nullptr;
 }
 
 bool CGitStatus::GetRepoRootInternal(const wstring& path, wstring& repoRoot_out, git_buf &buf, git_repository *&repo)

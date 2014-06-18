@@ -87,7 +87,6 @@ const wstring GetState(const CacheServiceResponse& response)
 int _tmain(int argc, _TCHAR* argv[])
 {
 	CRemoteLink remoteLink;
-	CacheServiceRequest request;
 	wchar_t* currentDir = new wchar_t[MAX_PATH];
 	int index = 1;
 	if (argc == 2)

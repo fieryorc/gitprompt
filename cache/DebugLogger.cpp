@@ -32,5 +32,6 @@ void Logger::LogInfo(const wstring& msg)
 
 void Logger::Log(const wstring& msg)
 {
-	OutputDebugString(msg.c_str());
+	wstring out = msg + L"\n";
+	OutputDebugString(out.c_str());
 }

@@ -30,8 +30,13 @@ private:
 	vector<BYTE> m_BackupBuffer;
 
 	bool OpenDirectory();
-	void BeginRead();
 	static DWORD WINAPI ThreadStart(LPVOID lpvParam);
+
+	/**
+	* Returns true if the call needs to be restarted.
+	*/
+	bool WaitForChanges();
+	bool IsIgnorable(FILE_NOTIFY_INFORMATION *info);
 	void Notify(bool isSucceeded);
 
 public:
