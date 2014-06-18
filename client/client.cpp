@@ -110,9 +110,11 @@ int _tmain(int argc, _TCHAR* argv[])
 	if (response.isSuccess)
 	{
 		UINT codePage = 65001; // UTF-8
+		UINT oldCodePage = GetConsoleOutputCP();
 		if (IsValidCodePage(codePage))
 			SetConsoleOutputCP(codePage);
 		wprintf(L"(%S) i[+%d, -%d, ~%d] w[+%d, -%d, ~%d] (%s)", converter.to_bytes(branch).c_str(), response.n_addedIndex, response.n_deletedIndex, response.n_modifiedIndex, response.n_addedWorkDir, response.n_deletedWorkDir, response.n_modifiedWorkDir, GetState(response).c_str());
+		SetConsoleOutputCP(oldCodePage);
 		return 0;
 	}
 	return 1;
