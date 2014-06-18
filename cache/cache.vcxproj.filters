@@ -57,6 +57,9 @@
     <ClInclude Include="GitStatusList.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="MyUtils.h">
+      <Filter>Header Files\Utils</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -93,5 +96,8 @@
     <Image Include="cache.ico">
       <Filter>Resource Files</Filter>
     </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

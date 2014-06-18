@@ -15,6 +15,8 @@ m_hDirectory(INVALID_HANDLE_VALUE)
 
 CDirectoryMonitor::~CDirectoryMonitor()
 {
+	this->m_callback = nullptr;
+	this->m_callbackContext = nullptr;
 	if (this->m_hDirectory != INVALID_HANDLE_VALUE)
 	{
 		CancelIo(this->m_hDirectory);
@@ -123,7 +125,7 @@ bool CDirectoryMonitor::IsIgnorable(FILE_NOTIFY_INFORMATION *info)
 	wstring fileName = info->FileName;
 	if (info->Action == FILE_ACTION_MODIFIED && fileName.compare(L".git") == 0)
 		return true;
-	if (fileName.compare(L".git\\index.lock") == 0)
+	if (fileName.compare(L".git\\index.lock") == 0 || fileName.compare(L"index.lock") == 0)
 		return true;
 	return false;
 }

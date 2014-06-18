@@ -4,6 +4,7 @@
 #include "GitStatus.h"
 #include "DebugLogger.h"
 #include "git2.h"
+#include "MyUtils.h"
 
 CMutex CGitStatus::m_mutex;
 
@@ -12,6 +13,7 @@ CGitStatus::CGitStatus(const wstring& startDir)
 {
 	this->m_status = GS_NOTLOADED;
 	this->m_dirMonitor = nullptr;
+	this->m_dirMonitorGitDir = nullptr;
 	this->InitState();
 	this->m_critSec.Init();	
 }
@@ -21,8 +23,7 @@ CGitStatus::~CGitStatus()
 {
 	this->m_critSec.Term();
 	this->m_waitHandle.CloseHandle();
-	if (this->m_dirMonitor != nullptr)
-		delete this->m_dirMonitor;
+	CleanupDirectoryMonitors();
 }
 
 void CGitStatus::InitState()
@@ -113,7 +114,7 @@ void CGitStatus::Load()
 	// This is temporary.
 	CMutexLock mutexLock(&m_mutex);
 
-	this->m_gitDir = converter.from_bytes(buf.ptr);
+	this->m_gitDir = MyUtils::NormalizePath(converter.from_bytes(buf.ptr));
 
 	// Get current state of repo. (merge/rebase in progress etc)
 	this->m_repoState = git_repository_state(repo);
@@ -150,20 +151,28 @@ void CGitStatus::Load()
 
 void CGitStatus::MonitorForChanges()
 {
-	if (this->m_dirMonitor != nullptr)
-		delete this->m_dirMonitor;
+	CleanupDirectoryMonitors();
 
 	this->m_dirMonitor = new CDirectoryMonitor(this->m_repoRoot);
 	this->m_dirMonitor->Monitor(&DirectoryChangedCallback, this);
+
+	// If git dir is under repo root, we don't have to monitor it.
+	
+	wstring expectedGitDir = MyUtils::NormalizePath(this->m_repoRoot + L".git\\");
+	if (expectedGitDir.compare(this->m_gitDir) != 0)
+	{
+		this->m_dirMonitorGitDir = new CDirectoryMonitor(this->m_gitDir);
+		this->m_dirMonitorGitDir->Monitor(&DirectoryChangedCallback, this);
+	}
 }
 
 void CGitStatus::DirectoryChangedCallback(CDirectoryMonitor::ChangeType type, void *context)
 {
 	CGitStatus *me = (CGitStatus*)context;
-	CriticalSection(me->m_critSec);
+	CriticalSection lock(me->m_critSec);
 	me->SetStatus(GS_INVALIDATED);
-	delete me->m_dirMonitor;
-	me->m_dirMonitor = nullptr;
+
+	me->CleanupDirectoryMonitors();
 }
 
 bool CGitStatus::GetRepoRootInternal(const wstring& path, wstring& repoRoot_out, git_buf &buf, git_repository *&repo)
@@ -195,18 +204,7 @@ bool CGitStatus::GetRepoRootInternal(const wstring& path, wstring& repoRoot_out,
 		git_buf_free(&buf);
 		return false;
 	}
-	wstring repoRoot = converter.from_bytes(workDir);
-
-	TCHAR repoRootNormalized[MAX_PATH + 1];
-	if (GetFullPathName(repoRoot.c_str(), MAX_PATH, repoRootNormalized, NULL) <= 0)
-	{
-		Logger::LogError(L"Unable to convert the path using GetFullPathName : " + repoRoot);
-		git_repository_free(repo);
-		return false;
-	}
-
-	repoRoot_out = repoRootNormalized;
-	std::transform(repoRoot_out.begin(), repoRoot_out.end(), repoRoot_out.begin(), ::toupper);
+	repoRoot_out = MyUtils::NormalizePath(converter.from_bytes(workDir));
 	
 	return true;
 }

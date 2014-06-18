@@ -70,6 +70,7 @@ public:
 private:
 	CComCriticalSection m_critSec;
 	CDirectoryMonitor *m_dirMonitor;
+	CDirectoryMonitor *m_dirMonitorGitDir;
 	wstring m_startDir;
 
 	/**
@@ -111,5 +112,15 @@ private:
 	static bool CGitStatus::GetRepoRootInternal(const wstring& path, wstring& repoRoot_out, git_buf &buf, git_repository *&repo);
 	static void DirectoryChangedCallback(CDirectoryMonitor::ChangeType type, void *context);
 	void MonitorForChanges();
+
+	void CleanupDirectoryMonitors()
+	{
+		if (this->m_dirMonitor != nullptr)
+			delete this->m_dirMonitor;
+		if (this->m_dirMonitorGitDir != nullptr)
+			delete this->m_dirMonitorGitDir;
+		this->m_dirMonitor = nullptr;
+		this->m_dirMonitorGitDir = nullptr;
+	}
 
 };
