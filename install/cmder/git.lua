@@ -22,7 +22,7 @@ function git_prompt_filter()
 
     if details then
 
-        local branch, addedIndex, deletedIndex, modifiedIndex, addedWorkdir, deletedWorkdir, modifiedWorkdir  = string.match(details, "%((.*)%) i%[%+(%d+), %-(%d), %~(%d)%] w%[%+(%d+), %-(%d), %~(%d)%] (.*)")
+        local branch, addedIndex, deletedIndex, modifiedIndex, addedWorkdir, deletedWorkdir, modifiedWorkdir, repoState  = string.match(details, "%((.*)%) i%[%+(%d+), %-(%d), %~(%d)%] w%[%+(%d+), %-(%d), %~(%d)%] %((.*)%)")
 
         local added = addedIndex + addedWorkdir
         local deleted = deletedIndex + deletedWorkdir
@@ -36,7 +36,12 @@ function git_prompt_filter()
             color = colors.clean
         end
 
-        clink.prompt.value = string.gsub(clink.prompt.value, "{git}", color.."("..branch..")"..colors.clean.." [+"..added..", -"..deleted..", ~"..modified.."]")
+        if repoState ~= "" then
+            -- specifies if any operation(merge/rebase etc..) in progress.. 
+            repoState = " ("..repoState..")"
+        end
+
+        clink.prompt.value = string.gsub(clink.prompt.value, "{git}", color.."("..branch..")"..colors.clean.." [+"..added..", -"..deleted..", ~"..modified.."]"..repoState)
         return true
     end
     clink.prompt.value = string.gsub(clink.prompt.value, "{git}", "")

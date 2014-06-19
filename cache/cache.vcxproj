@@ -88,6 +88,7 @@
     </Link>
     <PostBuildEvent>
       <Command>copy $(SolutionDir)\ext\build\$(Configuration)\git2.dll $(TargetDir)
+copy $(SolutionDir)\install\cmder\git.lua $(TargetDir)
 </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
