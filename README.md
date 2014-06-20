@@ -59,6 +59,12 @@ This also starts GitPromptCache.exe process if not running already.
 
 CMDER 
 -----
+Latest cmder with gitprompt integration can be found here:
+https://github.com/fieryorc/cmder
+
+
+Doing it yourself:
+
 GitPrompt can be used to replace the default prompt that displays the branch and clean/dirty status.
 GitPrompt is much faster since it returns the cached restult most of the time.
 
@@ -68,7 +74,8 @@ GitPrompt is much faster since it returns the cached restult most of the time.
 
 POWERSHELL
 ----------
-For powershell, I have modified version of posh-git that you can install. This uses gitprompt to display the status prompt which will be much improved experience over the original posh-git implementation. 
+
+Latest posh-git with gitprompt integration can be found here:
 
 https://github.com/fieryorc/posh-git
 
